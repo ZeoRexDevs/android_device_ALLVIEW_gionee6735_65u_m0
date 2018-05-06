@@ -32,3 +32,7 @@ deploy:
     tags: false
     repo: TwrpBuilder/android_device_ALLVIEW_gionee6735_65u_m0
     branch: master
+
+branches:
+  except:
+    - /^(?i:untagged)-.*$/
