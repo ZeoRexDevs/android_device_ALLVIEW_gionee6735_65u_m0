@@ -7,7 +7,7 @@ before_script:
 - cd $HOME && mkdir twrp
 - wget -q https://github.com/TwrpBuilder/twrp-sources/releases/download/omni_twrp-6.0.1-20180502/omni_twrp-6.0.1-20180502-norepo.tar.lzma
   -O $HOME/twrp.tar.lzma
-- tar --lzma -xvf twrp.tar.lzma --directory $HOME/twrp/ && rm twrp.tar.lzma
+- tar --lzma -xf twrp.tar.lzma --directory $HOME/twrp/ && rm twrp.tar.lzma
 script:
   - cd $HOME/twrp/ && git clone https://github.com/zeorexdevs/android_device_ALLVIEW_gionee6735_65u_m0.git device/ALLVIEW/gionee6735_65u_m0
   - git clone https://github.com/zeorexdevs/device_generic_twrpbuilder.git device/generic/twrpbuilder
