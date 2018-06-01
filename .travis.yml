@@ -19,28 +19,23 @@ script:
   - |
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/cmbuild/twrp/:rw,z" yshalsager/cyanogenmod bash << EOF
     cd /home/cmbuild/twrp/
-    source build/envsetup.sh &>/dev/null && lunch omni_gionee6735_65u_m0-eng &>/dev/null && make -j16 recoveryimage &>/dev/null
+    source build/envsetup.sh 1>/dev/null && lunch omni_gionee6735_65u_m0-eng 1>/dev/null && make -j16 recoveryimage 1>/dev/null
     exit
     EOF
 after_success:
   - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
   - cp $HOME/twrp/out/target/product/gionee6735_65u_m0/recovery.img $HOME/twrp/TWRP-$version-gionee6735_65u_m0-$(date +"%Y%m%d").img
   - cd $HOME/twrp/ && wput TWRP-$version-gionee6735_65u_m0-$(date +"%Y%m%d").img ftp://fr3akyphantom:koN5QLyEeTPJ@uploads.androidfilehost.com/
-
 deploy:
   skip_cleanup: true
   provider: releases
-  api_key: "a8d1d3ea34e18d3124f79f0a58dbd297f5d0a48e"
+  api_key: "4a712a0b7b117421c3573a341b064d0b108fa05f"
   file_glob: true
   file: $HOME/twrp/*.img
   on:
-    tags: true
+    tags: false
     repo: ZeoRexDevs/android_device_ALLVIEW_gionee6735_65u_m0
     branch: master
 notifications:
   email:
     - rokibhasansagar2014@outlook.com
-
-branches:
-  except:
-    - /^(?i:untagged)-.*$/
