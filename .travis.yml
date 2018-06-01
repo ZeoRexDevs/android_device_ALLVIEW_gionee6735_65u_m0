@@ -25,7 +25,7 @@ script:
 after_success:
   - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
   - cp $HOME/twrp/out/target/product/gionee6735_65u_m0/recovery.img $HOME/twrp/TWRP-$version-gionee6735_65u_m0-$(date +"%Y%m%d").img
-  - wput $HOME/twrp/TWRP-$version-gionee6735_65u_m0-$(date +"%Y%m%d").img ftp://fr3akyphantom:koN5QLyEeTPJ@uploads.androidfilehost.com/
+  - cd $HOME/twrp/ && wput TWRP-$version-gionee6735_65u_m0-$(date +"%Y%m%d").img ftp://fr3akyphantom:koN5QLyEeTPJ@uploads.androidfilehost.com/
 
 deploy:
   skip_cleanup: true
@@ -34,7 +34,7 @@ deploy:
   file_glob: true
   file: $HOME/twrp/*.img
   on:
-    tags: false
+    tags: true
     repo: ZeoRexDevs/android_device_ALLVIEW_gionee6735_65u_m0
     branch: master
 notifications:
