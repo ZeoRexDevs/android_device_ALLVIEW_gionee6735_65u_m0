@@ -6,7 +6,6 @@ addons:
 services:
   - docker
 before_install:
-  - sudo apt-get update -y && sudo apt-get upgrade -y
   - docker pull yshalsager/cyanogenmod:latest
 before_script:
 - cd $HOME && mkdir twrp
