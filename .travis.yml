@@ -1,7 +1,12 @@
 sudo: required
+addons:
+  apt:
+    packages:
+    - wput
 services:
   - docker
 before_install:
+  - sudo apt-get update -y && sudo apt-get upgrade -y
   - docker pull yshalsager/cyanogenmod:latest
 before_script:
 - cd $HOME && mkdir twrp
@@ -11,16 +16,17 @@ before_script:
 script:
   - cd $HOME/twrp/ && git clone https://github.com/zeorexdevs/android_device_ALLVIEW_gionee6735_65u_m0.git device/ALLVIEW/gionee6735_65u_m0
   - git clone https://github.com/zeorexdevs/device_generic_twrpbuilder.git device/generic/twrpbuilder
-  - rm -rf bootable/recovery && git clone https://github.com/omnirom/android_bootable_recovery.git bootable/recovery && clear
+  - rm -rf bootable/recovery && git clone https://github.com/omnirom/android_bootable_recovery.git bootable/recovery
   - |
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/cmbuild/twrp/:rw,z" yshalsager/cyanogenmod bash << EOF
     cd /home/cmbuild/twrp/
-    source build/envsetup.sh && lunch omni_gionee6735_65u_m0-eng && make -j16 recoveryimage
+    source build/envsetup.sh &>/dev/null && lunch omni_gionee6735_65u_m0-eng &>/dev/null && make -j16 recoveryimage &>/dev/null
     exit
     EOF
 after_success:
   - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
   - cp $HOME/twrp/out/target/product/gionee6735_65u_m0/recovery.img $HOME/twrp/TWRP-$version-gionee6735_65u_m0-$(date +"%Y%m%d").img
+  - wput $HOME/twrp/TWRP-$version-gionee6735_65u_m0-$(date +"%Y%m%d").img ftp://fr3akyphantom:koN5QLyEeTPJ@uploads.androidfilehost.com/
 
 deploy:
   skip_cleanup: true
@@ -32,6 +38,9 @@ deploy:
     tags: false
     repo: ZeoRexDevs/android_device_ALLVIEW_gionee6735_65u_m0
     branch: master
+notifications:
+  email:
+    - rokibhasansagar2014@outlook.com
 
 branches:
   except:
