@@ -1,3 +1,4 @@
+dist: xenial
 sudo: required
 addons:
   apt:
@@ -9,17 +10,17 @@ before_install:
   - docker pull yshalsager/cyanogenmod:latest
 before_script:
 - cd $HOME && mkdir twrp
-- wget -q https://github.com/TwrpBuilder/twrp-sources/releases/download/omni_twrp-6.0.1-20180502/omni_twrp-6.0.1-20180502-norepo.tar.lzma
-  -O $HOME/twrp.tar.lzma
-- tar --lzma -xf twrp.tar.lzma --directory $HOME/twrp/ && rm twrp.tar.lzma
+- wget -q https://github.com/rokibhasansagar/twrp_compressed_norepo/releases/download/v1.0.0/MinimalOmniTWRP-twrp-6.0-norepo-20180712.tar.xz
+  -O $HOME/twrp.tar.xz
+- tar -xJf twrp.tar.xz --directory $HOME/twrp/ && rm twrp.tar.xz
 script:
-  - cd $HOME/twrp/ && git clone https://github.com/zeorexdevs/android_device_ALLVIEW_gionee6735_65u_m0.git device/ALLVIEW/gionee6735_65u_m0
-  - git clone https://github.com/zeorexdevs/device_generic_twrpbuilder.git device/generic/twrpbuilder
+  - cd $HOME/twrp/ && git clone https://github.com/ZeoRexDevs/android_device_ALLVIEW_gionee6735_65u_m0.git device/ALLVIEW/gionee6735_65u_m0
+  - git clone https://github.com/ZeoRexDevs/device_generic_mtk_twrpbuilder.git device/generic/twrpbuilder
   - rm -rf bootable/recovery && git clone https://github.com/omnirom/android_bootable_recovery.git bootable/recovery
   - |
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/cmbuild/twrp/:rw,z" yshalsager/cyanogenmod bash << EOF
     cd /home/cmbuild/twrp/
-    source build/envsetup.sh 1>/dev/null && lunch omni_gionee6735_65u_m0-eng 1>/dev/null && make -j16 recoveryimage 1>/dev/null
+    source build/envsetup.sh && lunch omni_gionee6735_65u_m0-eng && make -j32 recoveryimage
     exit
     EOF
 after_success:
@@ -32,6 +33,8 @@ deploy:
   api_key: "4a712a0b7b117421c3573a341b064d0b108fa05f"
   file_glob: true
   file: $HOME/twrp/*.img
+  file: $HOME/twrp/out/target/product/Primo_RX5/*.img
+  file: $HOME/twrp/out/target/product/Primo_RX5/recovery/root/default.prop
   on:
     tags: false
     repo: ZeoRexDevs/android_device_ALLVIEW_gionee6735_65u_m0
